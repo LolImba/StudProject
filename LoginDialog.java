@@ -1,50 +1,28 @@
-package com.mySampleApplication.client.GXTClient;
+package com.mySampleApplication.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sencha.gxt.widget.core.client.ContentPanel;
-import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.form.FieldLabel;
-import com.sencha.gxt.widget.core.client.form.PasswordField;
-import com.sencha.gxt.widget.core.client.form.TextField;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.*;
 
-public class LoginDialog extends Dialog {
-    public LoginDialog(BorderLayoutContainer container){
-        VerticalLayoutContainer verticalLayoutContainer = new VerticalLayoutContainer();
-        TextField loginField = new TextField();
-        PasswordField passwordField = new PasswordField();
-        FieldLabel loginLabel = new FieldLabel(loginField, "Login");
-        FieldLabel passLabel = new FieldLabel(passwordField, "Password");
-        verticalLayoutContainer.add(loginLabel);
-        verticalLayoutContainer.add(passLabel);
-//        ContentPanel contentPanel = new ContentPanel();
-//        contentPanel.add(verticalLayoutContainer);
-        setWidget(verticalLayoutContainer);
-        TextButton loginButton = new TextButton("Login");
-        loginButton.addSelectHandler(new SelectEvent.SelectHandler() {
+public class LoginDialog extends DialogBox {
+
+    public LoginDialog(){
+        FlexTable table = new FlexTable();
+        this.setWidget(table);
+        setText("Login");
+        table.setText(0,0, "Login: ");
+        table.setText(1,0, "Password: ");
+        TextBox login = new TextBox();
+        table.setWidget(0,1, login);
+        PasswordTextBox password = new PasswordTextBox();
+        table.setWidget(1,1, password);
+        Button btnLogin = new Button("Login");
+        btnLogin.addClickHandler(new ClickHandler() {
             @Override
-            public void onSelect(SelectEvent event) {
-                MainEntry.appServiceAsync.checkUser(loginField.getValue(), passwordField.getValue(),
-                        new AsyncCallback<Boolean>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(Boolean result) {
-                        if(result){
-                            container.enable();
-                            hide();
-                        }
-                    }
-                });
+            public void onClick(ClickEvent event) {
+                LoginDialog.this.hide();
             }
         });
-        setPredefinedButtons();
-        addButton(loginButton);
+        table.setWidget(2,0, btnLogin);
     }
 }
